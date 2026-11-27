@@ -2769,7 +2769,7 @@ if(cfg&&cfg.apiKey){
       return'ok';
     };
     // Điện thoại / app đã cài: chuyển hẳn sang trang Google rồi quay về (cửa sổ phụ hay bị kẹt). Máy tính: dùng cửa sổ phụ.
-    const useRedirect=()=>/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+    const useRedirect=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
     C.teacherLogin=async()=>{const pv=new A.GoogleAuthProvider();
       try{if(useRedirect()){try{localStorage.setItem('nc-after-login','teacher')}catch(e){}await A.signInWithRedirect(auth,pv)}
         else await A.signInWithPopup(auth,pv)}
