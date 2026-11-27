@@ -3,7 +3,7 @@
 // Đoạn cấu hình này là công khai theo thiết kế của Firebase; dữ liệu được bảo vệ bằng Firestore Rules.
 window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyAdOTgc5QRLcHBhlMuHAR9rrBLZx0JDBeM",
-  authDomain: "xuyenvietnoichuan.netlify.app",
+  authDomain: "xuyen-viet-noi-chuan.firebaseapp.com",
   projectId: "xuyen-viet-noi-chuan",
   storageBucket: "xuyen-viet-noi-chuan.firebasestorage.app",
   messagingSenderId: "736604790371",
