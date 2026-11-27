@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=aec8cac9-3870-4dca-8621-ce0873a7c805
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Thống kê cả nước · Xuyên Việt Nói Chuẩn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8f5ff;--card:#fffdf6;--ink:#13283d;--mute:#5b6b7b;--line:#13283d;--soft:#d7e6f2;
+  --sea:#1f84c6;--sun:#ffc21a;--ok:#2a9d5c;--bad:#d64545;
+  --bac:#e4572e;--trung:#e39b00;--nam:#2a9d5c;--all:#7b5cd6;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1b27;--card:#172636;--ink:#e8f1f8;--mute:#9db0c2;--line:#3a5269;--soft:#24384b;
+  --sea:#4aa8e6;--sun:#ffcf4a;--ok:#4cc47f;--bad:#f07070;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1b27;--card:#172636;--ink:#e8f1f8;--mute:#9db0c2;--line:#3a5269;--soft:#24384b;
+  --sea:#4aa8e6;--sun:#ffcf4a;--ok:#4cc47f;--bad:#f07070;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Be Vietnam Pro",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:28px;font-weight:800;margin:0 0 4px}
+h2{font-size:18px;font-weight:800;margin:0 0 10px}
+.sub{color:var(--mute);margin:0 0 18px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.btn{font:inherit;font-weight:700;border:2px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--sun);color:#13283d;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.6;cursor:default}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:16px}
+.kpi{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.kpi b{display:block;font-size:28px;font-weight:800;line-height:1.1}
+.kpi span{color:var(--mute);font-size:13px}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.two .card{margin-bottom:0}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:minmax(90px,150px) 1fr 52px;gap:8px;align-items:center;font-size:13px}
+.bar .lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{display:block;background:var(--soft);border-radius:6px;height:14px;overflow:hidden}
+.bar .fi{display:block;height:100%;border-radius:6px;background:var(--sea)}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.cols{display:flex;align-items:flex-end;gap:3px;height:140px;border-bottom:2px solid var(--line);padding-top:8px}
+.cols div{flex:1;background:var(--sea);border-radius:4px 4px 0 0;min-height:2px}
+.cols div:last-child{background:var(--sun)}
+.axis{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;margin-top:4px}
+.note{color:var(--mute);font-size:13px;margin:8px 0 0}
+.msg{padding:10px 12px;border-radius:12px;border:2px solid var(--line);margin-bottom:16px}
+.msg.bad{background:color-mix(in srgb,var(--bad) 14%,var(--card))}
+.msg.ok{background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+pre{background:var(--soft);border-radius:10px;padding:10px;overflow:auto;font-size:12.5px;white-space:pre}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+input,select{font:inherit;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input{flex:1 1 200px}
+.tblw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--soft);text-align:left;white-space:nowrap}
+th{font-weight:800;position:sticky;top:0;background:var(--card)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:700;border:1.5px solid var(--line)}
+.up{color:var(--ok);font-weight:700}.down{color:var(--bad);font-weight:700}
+.hide{display:none}
+.center{text-align:center;padding:40px 16px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+</style>
+<script src="firebase-config.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Thống kê cả nước</h1>
+      <p class="sub" style="margin:0">Xuyên Việt Nói Chuẩn · trang quản trị, chỉ tài khoản quản trị xem được</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost hide" id="reload">Tải lại số liệu</button>
+      <button class="btn ghost hide" id="csv">Tải danh sách (CSV)</button>
+      <button class="btn ghost hide" id="logout">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div id="gate" class="card center">Đang kết nối máy chủ...</div>
+  <div id="errs"></div><div id="anonErr"></div><div id="d3Err"></div>
+
+  <div id="main" class="hide">
+    <div class="grid" id="kpis"></div>
+
+    <div class="card">
+      <h2>Người chơi hoạt động 30 ngày qua</h2>
+      <div class="cols" id="actCols"></div>
+      <div class="axis"><span id="ax1"></span><span>hôm nay</span></div>
+      <p class="note">Mỗi cột là số tài khoản có lần chơi gần nhất rơi vào ngày đó. Cột vàng là hôm nay.</p>
+    </div>
+
+    <div class="two" style="margin-bottom:16px">
+      <div class="card"><h2>Lượt chơi theo chặng</h2><div class="bars" id="byLevel"></div></div>
+      <div class="card"><h2>Âm hay sai nhất cả nước</h2><div class="bars" id="byErr"></div>
+        <p class="note">Chỉ tính lượt chơi lúc phòng yên tĩnh. Lượt sai lúc ồn: <b id="noisyN">0</b> (tính riêng).</p></div>
+    </div>
+
+    <div class="two" style="margin-bottom:16px">
+      <div class="card"><h2>Người chơi theo quê</h2><div class="bars" id="byReg"></div></div>
+      <div class="card"><h2>Từ hay đọc sai nhất</h2><div class="bars" id="byWord"></div></div>
+      <div class="card"><h2>Từ người chơi báo "Máy nghe nhầm"</h2><p class="note">Nhiều lượt báo ở một từ: máy hay nghe sai từ đó, nên xem lại hoặc thay từ khác.</p><div class="bars" id="byMh"></div></div>
+    </div>
+
+    <div class="two" style="margin-bottom:16px">
+      <div class="card"><h2>Đọc thử 10 từ: tiến bộ</h2><div id="diag"></div></div>
+      <div class="card"><h2>Âm cần luyện (theo lượt đọc thử gần nhất)</h2><div class="bars" id="byTag"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>Các lớp</h2>
+      <div class="tblw"><table><thead><tr><th>Lớp</th><th>Mã lớp</th><th class="n">Học sinh</th><th class="n">Lượt chơi</th><th class="n">Hoạt động 7 ngày</th><th>Phụ huynh đồng ý</th><th>Ngày tạo</th></tr></thead><tbody id="classT"></tbody></table></div>
+    </div>
+
+    <div class="card">
+      <h2>Danh sách người chơi</h2>
+      <div class="tools">
+        <input id="q" placeholder="Tìm theo tên hoặc mã lớp">
+        <select id="fKind"><option value="">Tất cả</option><option value="personal">Tài khoản cá nhân</option><option value="class">Trong lớp</option></select>
+        <select id="fSort"><option value="act">Hoạt động gần nhất</option><option value="plays">Nhiều lượt chơi nhất</option><option value="passed">Qua nhiều chặng nhất</option><option value="new">Mới tạo</option></select>
+      </div>
+      <div class="tblw"><table><thead><tr><th>Tên</th><th>Loại</th><th>Lớp/Trường/Nghề</th><th>Quê</th><th class="n">Chặng qua</th><th class="n">Lượt chơi</th><th>Đọc thử đầu → gần nhất</th><th>Đồng ý</th><th>Hoạt động gần nhất</th></tr></thead><tbody id="playT"></tbody></table></div>
+      <p class="note" id="playInfo"></p>
+      <button class="btn ghost hide" id="more">Xem thêm</button>
+    </div>
+
+    <p class="note">Không tính người chơi không tạo tài khoản (chỉ lưu trên máy của các em hoặc dùng mã lưu), vì game không gửi tiến độ của họ lên máy chủ.</p>
+  </div>
+</div>
+
+<script type="module">
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN=n=>Number(n||0).toLocaleString('vi-VN');
+const ADMIN='huywynt@gmail.com';
+
+const REG={bac:{name:'Miền Bắc',c:'var(--bac)'},trung:{name:'Miền Trung',c:'var(--trung)'},nam:{name:'Miền Nam',c:'var(--nam)'}};
+const LV={
+  sx:{name:'Xe hay se',place:'Hạ Long',r:'bac'},nl:{name:'N hay L',place:'Hải Phòng',r:'bac'},
+  trch:{name:'Tr hay Ch',place:'Hà Nội',r:'bac'},rd:{name:'R hay D',place:'Ninh Bình',r:'bac'},
+  a:{name:'Âm "a"',place:'Nha Trang',r:'trung'},e:{name:'Vần "ê"',place:'Quy Nhơn',r:'trung'},
+  san:{name:'Sân hay xăng',place:'Đà Nẵng',r:'trung'},nga:{name:'Dấu ngã',place:'Huế',r:'trung'},
+  hnn:{name:'Hỏi, ngã hay nặng',place:'Vinh',r:'trung'},
+  vd:{name:'V hay D',place:'Sài Gòn',r:'nam'},rg:{name:'R hay G',place:'Vũng Tàu',r:'nam'},
+  nng:{name:'Âm cuối n hay ng',place:'Cần Thơ',r:'nam'},tc:{name:'Âm cuối t hay c',place:'Bến Tre',r:'nam'},
+  anh:{name:'Vần anh và ưu',place:'Cà Mau',r:'nam'},all:{name:'Tổng hợp',place:'Cả nước',r:'all'},
+  daily:{name:'Thử thách hằng ngày',place:'Mỗi ngày',r:'all'},
+  cau_bac:{name:'Câu & vè miền Bắc',place:'Câu hay xứ Bắc',r:'bac'},cau_trung:{name:'Câu & vè miền Trung',place:'Câu hay xứ Trung',r:'trung'},
+  cau_nam:{name:'Câu & vè miền Nam',place:'Câu hay xứ Nam',r:'nam'},
+  lop:{name:'Bài luyện của lớp',place:'Lớp em',r:'all'},tu:{name:'Bộ từ tự soạn',place:'Tự soạn',r:'all'},
+  ad_liu:{name:'Câu líu lưỡi',place:'Người lớn',r:'all'},ad_tn:{name:'Tục ngữ, ca dao',place:'Người lớn',r:'all'},ad_tin:{name:'Đọc bản tin',place:'Người lớn',r:'all'},ad_gv:{name:'Giao tiếp: Giáo viên',place:'Người lớn',r:'all'},ad_bh:{name:'Giao tiếp: Bán hàng',place:'Người lớn',r:'all'},ad_td:{name:'Giao tiếp: Tổng đài',place:'Người lớn',r:'all'},ad_hd:{name:'Giao tiếp: Hướng dẫn viên',place:'Người lớn',r:'all'},ad_vp:{name:'Giao tiếp: Văn phòng',place:'Người lớn',r:'all'},ad_yt:{name:'Giao tiếp: Y tế',place:'Người lớn',r:'all'}
+};
+// chặng mới thêm sau này vẫn hiện (dùng mã chặng làm tên)
+const lvLabel=k=>LV[k]?`${LV[k].place} · ${LV[k].name}`:k;
+const lvColor=k=>LV[k]?`var(--${LV[k].r})`:'var(--sea)';
+
+const ms=x=>{if(!x)return 0;if(x.toMillis)return x.toMillis();if(x.seconds)return x.seconds*1000;const t=+new Date(x);return isNaN(t)?0:t};
+const dstr=t=>t?new Date(t).toLocaleDateString('vi-VN'):'-';
+const dtstr=t=>t?new Date(t).toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}):'-';
+const sumObj=o=>Object.values(o||{}).reduce((a,b)=>a+(+b||0),0);
+const addTo=(acc,o)=>{for(const k in (o||{}))acc[k]=(acc[k]||0)+(+o[k]||0)};
+const pct=e=>e&&e.n?Math.round(e.ok/e.n*100):null;
+
+function bars(el,entries,{color,max,fmt}={}){
+  if(!entries.length){el.innerHTML='<p class="note">Chưa có số liệu.</p>';return}
+  const mx=max||Math.max(...entries.map(e=>e[1]),1);
+  el.innerHTML=entries.map(([k,v,lab])=>`<div class="bar" title="${esc(lab||k)}: ${fmtN(v)}"><span class="lb">${esc(lab||k)}</span><span class="tr"><span class="fi" style="width:${Math.max(2,v/mx*100)}%;background:${typeof color==='function'?color(k):(color||'var(--sea)')}"></span></span><span class="v">${fmt?fmt(v):fmtN(v)}</span></div>`).join('');
+}
+
+const cfg=window.FIREBASE_CONFIG;
+if(!cfg||!cfg.apiKey){$('gate').textContent='Chưa có cấu hình máy chủ (firebase-config.js). Đặt file này cùng thư mục với game.';throw new Error('no config')}
+
+const V='10.12.2',U=`https://www.gstatic.com/firebasejs/${V}/`;
+const[{initializeApp},A,F]=await Promise.all([import(U+'firebase-app.js'),import(U+'firebase-auth.js'),import(U+'firebase-firestore.js')]);
+const app=initializeApp(cfg),auth=A.getAuth(app),db=F.getFirestore(app);
+A.getRedirectResult(auth).catch(e=>console.warn(e));
+
+async function login(){
+  const pv=new A.GoogleAuthProvider();pv.setCustomParameters({prompt:'select_account'});
+  try{await A.signInWithPopup(auth,pv)}
+  catch(e){if(e.code==='auth/popup-blocked'||e.code==='auth/operation-not-supported-in-this-environment'){await A.signInWithRedirect(auth,pv);return}
+    $('gate').insertAdjacentHTML('beforeend',`<p class="note">Không đăng nhập được: ${esc(e.message)}</p>`)}
+}
+$('logout').onclick=()=>A.signOut(auth);
+$('reload').onclick=()=>load();
+
+A.onAuthStateChanged(auth,u=>{
+  ['reload','csv','logout'].forEach(id=>$(id).classList.toggle('hide',!u||(u.email!==ADMIN)));
+  if(u&&u.email!==ADMIN)$('logout').classList.remove('hide');
+  $('main').classList.add('hide');$('errs').innerHTML='';
+  if(!u){
+    $('gate').classList.remove('hide');
+    $('gate').innerHTML='<p>Đăng nhập bằng tài khoản Google quản trị để xem thống kê.</p><button class="btn" id="gLogin">Đăng nhập bằng Google</button>';
+    $('gLogin').onclick=login;return;
+  }
+  if(u.email!==ADMIN){
+    $('gate').classList.remove('hide');
+    $('gate').innerHTML='<p><b>Trang này chỉ dành cho quản trị.</b></p><p class="note">Tài khoản đang đăng nhập không có quyền xem. Thầy cô xem học sinh lớp mình ở Trang giáo viên trong game.</p><p><a href="./">← Về game</a></p>';
+    return;
+  }
+  load();
+});
+
+const RULES=`    // === THỐNG KÊ CẢ NƯỚC: chỉ quản trị được đọc (thêm mới, không sửa quy tắc cũ) ===
+    function laQuanTriThongKe() {
+      return request.auth != null
+        && request.auth.token.email == '${ADMIN}'
+        && request.auth.token.email_verified == true;
+    }
+    match /users/{uid} { allow read: if laQuanTriThongKe(); }
+    match /classes/{code} { allow read: if laQuanTriThongKe(); }
+    match /{path=**}/students/{sid} { allow read: if laQuanTriThongKe(); }`;
+const RULES_ANON=`    // === LƯỢT CHƠI ẨN DANH (người chơi không tài khoản) – thêm mới, không sửa quy tắc cũ ===
+    match /anon/{id} {
+      allow create, update: if id.matches('^[0-9a-f]{24}$')
+        && request.resource.data.keys().hasOnly(['region','plays','passed','first','last'])
+        && request.resource.data.plays is int && request.resource.data.plays >= 0 && request.resource.data.plays <= 100000
+        && request.resource.data.passed is int && request.resource.data.passed >= 0 && request.resource.data.passed <= 100
+        && (request.resource.data.region == null || (request.resource.data.region is string && request.resource.data.region.size() <= 12))
+        && request.resource.data.first is string && request.resource.data.first.size() == 10
+        && request.resource.data.last == request.time;
+      allow delete: if id.matches('^[0-9a-f]{24}$');
+      allow read: if laQuanTriThongKe();
+    }`;
+const RULES_D3=`    // === ĐỢT 3: BẢNG XẾP HẠNG LỚP + THI ĐUA 3 MIỀN – thêm mới, không sửa quy tắc cũ ===
+    match /classes/{code}/board/{uid} {
+      allow read: if request.auth != null && (
+        exists(/databases/$(database)/documents/classes/$(code)/students/$(request.auth.uid))
+        || get(/databases/$(database)/documents/classes/$(code)).data.owner == request.auth.uid
+        || laQuanTriThongKe());
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/classes/$(code)/students/$(uid))
+        && request.resource.data.keys().hasOnly(['name','wk','okNow','totNow','okPrev','totPrev','base','upd'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.wk is string && request.resource.data.wk.size() == 10
+        && request.resource.data.okNow is int && request.resource.data.totNow is int && request.resource.data.totNow <= 100000
+        && request.resource.data.okPrev is int && request.resource.data.totPrev is int && request.resource.data.totPrev <= 100000
+        && (request.resource.data.base == null || request.resource.data.base is int)
+        && request.resource.data.upd == request.time;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+    match /regionWeek/{id} {
+      allow read: if true;
+      allow create: if id.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}_(bac|trung|nam)$')
+        && request.resource.data.keys().hasOnly(['ok','tot'])
+        && request.resource.data.ok is int && request.resource.data.tot is int
+        && request.resource.data.ok >= 0 && request.resource.data.ok <= request.resource.data.tot
+        && request.resource.data.tot <= 60;
+      allow update: if request.resource.data.keys().hasOnly(['ok','tot'])
+        && request.resource.data.ok is int && request.resource.data.tot is int
+        && request.resource.data.tot - resource.data.tot >= 0 && request.resource.data.tot - resource.data.tot <= 60
+        && request.resource.data.ok - resource.data.ok >= 0
+        && request.resource.data.ok - resource.data.ok <= request.resource.data.tot - resource.data.tot;
+    }`;
+let ANON=null;
+
+let PLAYERS=[],CLASSES=[],shown=50;
+
+async function load(){
+  $('gate').classList.remove('hide');$('gate').textContent='Đang tải số liệu...';$('reload').disabled=true;
+  const [rU,rS,rC]=await Promise.allSettled([
+    F.getDocs(F.collection(db,'users')),
+    F.getDocs(F.collectionGroup(db,'students')),
+    F.getDocs(F.collection(db,'classes'))
+  ]);
+  const wkNow=(()=>{const x=new Date();x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x.toLocaleDateString('en-CA')})();
+  const rR=await Promise.all(['bac','trung','nam'].map(r=>F.getDoc(F.doc(db,'regionWeek',wkNow+'_'+r)))).then(v=>({status:'fulfilled',value:v}),e=>({status:'rejected',reason:e}));
+  $('d3Err').innerHTML=rR.status==='rejected'?`<div class="msg bad"><b>Chưa bật bảng xếp hạng lớp và thi đua 3 miền.</b> Vào Firebase → Firestore Database → Rules, dán đoạn dưới đây vào ngay sau các đoạn đã thêm trước đó rồi bấm Publish:<pre>${esc(RULES_D3)}</pre></div>`
+    :`<div class="card"><h2>Thi đua 3 miền · tuần này (từ ${new Date(wkNow).toLocaleDateString('vi-VN')})</h2><div class="bars" id="regBars"></div><p class="note">Tỉ lệ đọc chuẩn (%) của từng miền. ${rR.value.map((d,i)=>['Miền Bắc','Miền Trung','Miền Nam'][i]+': '+((d.exists()&&d.data().tot)||0)+' lượt').join(' · ')}</p></div>`;
+  if(rR.status==='fulfilled')bars($('regBars'),rR.value.map((d,i)=>{const x=d.exists()?d.data():{ok:0,tot:0};return[['bac','trung','nam'][i],x.tot?Math.round(x.ok/x.tot*100):0,['Miền Bắc','Miền Trung','Miền Nam'][i]]}),{max:100,color:k=>`var(--${k})`});
+  const rA=await F.getDocs(F.collection(db,'anon')).then(v=>({status:'fulfilled',value:v}),e=>({status:'rejected',reason:e}));
+  ANON=rA.status==='fulfilled'?rA.value.docs.map(d=>{const x=d.data();return{region:x.region,plays:+x.plays||0,passed:+x.passed||0,first:x.first||'',last:ms(x.last)}}):null;
+  $('reload').disabled=false;
+  $('anonErr').innerHTML=rA.status==='rejected'?`<div class="msg bad"><b>Chưa đếm được người chơi không tài khoản.</b> Vào Firebase → Firestore Database → Rules, dán đoạn dưới đây vào ngay sau đoạn "THỐNG KÊ CẢ NƯỚC" rồi bấm Publish:<pre>${esc(RULES_ANON)}</pre></div>`:'';
+  const fails=[['Tài khoản cá nhân',rU],['Học sinh trong lớp',rS],['Danh sách lớp',rC]].filter(x=>x[1].status==='rejected');
+  $('errs').innerHTML=fails.length?`<div class="msg bad"><b>Máy chủ chưa cho đọc: ${fails.map(f=>esc(f[0])).join(', ')}.</b>
+    <p style="margin:6px 0">Cần thêm quy tắc đọc cho quản trị vào Firebase Console → Firestore Database → Rules. Dán đoạn dưới đây ngay trước 2 dấu <code>}</code> cuối cùng, rồi bấm <b>Publish</b>. Quy tắc cũ giữ nguyên. Dòng đầu tiên của Rules phải là <code>rules_version = '2';</code></p>
+    <pre>${esc(RULES)}</pre><p class="note">Lỗi: ${fails.map(f=>esc(f[1].reason&&(f[1].reason.code||f[1].reason.message))).join(' | ')}</p></div>`:'';
+
+  const map=new Map();
+  if(rU.status==='fulfilled')rU.value.docs.forEach(d=>{const x=d.data();
+    map.set(d.id,{uid:d.id,name:x.name||'?',personal:true,consent:x.consent||null,info:x.info||null,classCode:x.classCode||null,prog:x.prog||{},upd:ms(x.updated),cre:ms(x.created)})});
+  if(rS.status==='fulfilled')rS.value.docs.forEach(d=>{const x=d.data(),code=d.ref.parent.parent?d.ref.parent.parent.id:(x.classCode||'?');
+    const p=map.get(d.id),upd=ms(x.updated),cre=ms(x.created);
+    if(p){p.classCode=p.classCode||code;if(upd>p.upd){p.prog=x.prog||p.prog;p.upd=upd}}
+    else map.set(d.id,{uid:d.id,name:x.name||'?',personal:false,classCode:code,prog:x.prog||{},upd,cre})});
+  PLAYERS=[...map.values()].map(p=>{const st=(p.prog&&p.prog.stats)||{},stars=(p.prog&&p.prog.stars)||{};
+    const dg=st.diag||[];
+    return{...p,act:Math.max(p.upd,p.cre),region:p.prog&&p.prog.region,st,
+      plays:sumObj(st.plays),wins:sumObj(st.wins),passed:Object.values(stars).filter(x=>x>0).length,
+      d1:st.diagFirst||null,d2:dg.length?dg[dg.length-1]:null,nDiag:dg.length}});
+  CLASSES=rC.status==='fulfilled'?rC.value.docs.map(d=>({code:d.id,...d.data()})):[];
+  // lớp có học sinh nhưng không đọc được danh sách lớp
+  const known=new Set(CLASSES.map(c=>c.code));
+  PLAYERS.forEach(p=>{if(p.classCode&&!known.has(p.classCode)){known.add(p.classCode);CLASSES.push({code:p.classCode,name:'(không đọc được tên lớp)'})}});
+
+  $('gate').classList.add('hide');$('main').classList.remove('hide');
+  render();
+}
+
+function render(){
+  const now=Date.now(),D=86400000,P=PLAYERS;
+  const act7=P.filter(p=>now-p.act<7*D).length,act1=P.filter(p=>now-p.act<D).length;
+  const inClass=P.filter(p=>p.classCode).length,personal=P.filter(p=>p.personal).length;
+  const owners=new Set(CLASSES.map(c=>c.owner).filter(Boolean));
+  const plays=P.reduce((a,p)=>a+p.plays,0),wins=P.reduce((a,p)=>a+p.wins,0);
+  const kp=[
+    [P.length,'Tài khoản người chơi'],[personal,'Tài khoản cá nhân'],[inClass,'Học sinh trong lớp'],
+    [CLASSES.length,'Lớp học'],[owners.size,'Giáo viên tạo lớp'],
+    [plays,'Tổng lượt chơi'],[wins,'Lượt về đích'],[act1,'Chơi trong 24 giờ'],[act7,'Chơi trong 7 ngày']
+  ];
+  if(ANON){const a7=ANON.filter(a=>now-a.last<7*D).length;
+    kp.push([ANON.length,'Người chơi không tài khoản (mỗi máy 1)'],[ANON.reduce((x,a)=>x+a.plays,0),'Lượt chơi không tài khoản'],[a7,'Không tài khoản, chơi trong 7 ngày'])}
+  $('kpis').innerHTML=kp.map(([v,l])=>`<div class="kpi"><b>${fmtN(v)}</b><span>${l}</span></div>`).join('');
+
+  // hoạt động 30 ngày
+  const days=[...Array(30)].map((_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-29+i);return d.getTime()});
+  const cnt=days.map((t,i)=>P.filter(p=>p.act>=t&&p.act<(days[i+1]||t+D)).length);
+  const mx=Math.max(...cnt,1);
+  $('actCols').innerHTML=cnt.map((c,i)=>`<div style="height:${c/mx*100}%" title="${new Date(days[i]).toLocaleDateString('vi-VN')}: ${c} người"></div>`).join('');
+  $('ax1').textContent=new Date(days[0]).toLocaleDateString('vi-VN');
+
+  // chặng, lỗi, quê, từ
+  const pl={},er={},wk={};let noisy=0;
+  P.forEach(p=>{addTo(pl,p.st.plays);addTo(er,p.st.err);addTo(wk,p.st.weak);noisy+=sumObj(p.st.errNoisy)});
+  const order=Object.keys(LV);
+  bars($('byLevel'),Object.entries(pl).filter(e=>e[1]>0).sort((a,b)=>(order.indexOf(a[0])+99*(order.indexOf(a[0])<0))-(order.indexOf(b[0])+99*(order.indexOf(b[0])<0))).map(([k,v])=>[k,v,lvLabel(k)]),{color:lvColor});
+  bars($('byErr'),Object.entries(er).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>[k,v,lvLabel(k)]),{color:lvColor});
+  $('noisyN').textContent=fmtN(noisy);
+  const rg={};P.forEach(p=>{const k=p.region||'none';rg[k]=(rg[k]||0)+1});
+  bars($('byReg'),Object.entries(rg).sort((a,b)=>b[1]-a[1]).map(([k,v])=>[k,v,REG[k]?REG[k].name:'Chưa chọn quê']),{color:k=>REG[k]?REG[k].c:'var(--mute)'});
+  bars($('byWord'),Object.entries(wk).sort((a,b)=>b[1]-a[1]).slice(0,12),{color:'var(--bad)'});
+  {const mh={};P.forEach(p=>addTo(mh,p.st.mh));const E=Object.entries(mh).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]).slice(0,12);
+   if(E.length)bars($('byMh'),E,{color:'var(--sea)'});else $('byMh').innerHTML='<p class="note">Chưa có lượt báo nào.</p>'}
+
+  // đọc thử
+  const withD=P.filter(p=>p.d1),two=P.filter(p=>p.nDiag>=2&&p.d1&&p.d2);
+  const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;
+  const a1=avg(two.map(p=>pct(p.d1)).filter(x=>x!=null)),a2=avg(two.map(p=>pct(p.d2)).filter(x=>x!=null));
+  const up=two.filter(p=>pct(p.d2)>pct(p.d1)).length;
+  $('diag').innerHTML=withD.length?`<div class="grid" style="margin:0 0 8px">
+     <div class="kpi"><b>${fmtN(withD.length)}</b><span>Đã đọc thử</span></div>
+     <div class="kpi"><b>${fmtN(two.length)}</b><span>Đọc thử từ 2 lần</span></div>
+     <div class="kpi"><b>${fmtN(up)}</b><span>Tiến bộ</span></div></div>
+     ${two.length?`<div class="bars">${[['Lần đầu',a1],['Gần nhất',a2]].map(([l,v])=>`<div class="bar"><span class="lb">${l}</span><span class="tr"><span class="fi" style="width:${Math.max(2,v)}%;background:${l==='Lần đầu'?'var(--mute)':'var(--ok)'}"></span></span><span class="v">${v}%</span></div>`).join('')}</div>
+     <p class="note">Tỉ lệ đọc đúng trung bình của những em đã đọc thử từ 2 lần.</p>`:'<p class="note">Chưa có ai đọc thử lần thứ hai.</p>'}`
+    :'<p class="note">Chưa có ai đọc thử.</p>';
+  const tg={};P.forEach(p=>{if(p.d2&&Array.isArray(p.d2.w))p.d2.w.forEach(t=>tg[t]=(tg[t]||0)+1)});
+  bars($('byTag'),Object.entries(tg).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>[k,v,lvLabel(k)]),{color:lvColor});
+
+  // lớp
+  $('classT').innerHTML=CLASSES.map(c=>{const ss=P.filter(p=>p.classCode===c.code);
+      return{c,n:ss.length,pl:ss.reduce((a,p)=>a+p.plays,0),a7:ss.filter(p=>now-p.act<7*D).length}})
+    .sort((a,b)=>b.n-a.n||b.pl-a.pl)
+    .map(({c,n,pl,a7})=>`<tr><td>${esc(c.name||'-')}</td><td><b>${esc(c.code)}</b></td><td class="n">${n}</td><td class="n">${fmtN(pl)}</td><td class="n">${a7}</td><td>${c.parentConsent?'<span class="up">Đã xác nhận</span> '+dstr(ms(c.parentConsent.at)):'<span class="down">Chưa</span>'}</td><td>${dstr(ms(c.createdAt))}</td></tr>`).join('')
+    ||'<tr><td colspan="7" class="note">Chưa có lớp nào.</td></tr>';
+
+  shown=50;renderPlayers();
+}
+
+function filtered(){
+  const q=$('q').value.trim().toLowerCase(),k=$('fKind').value,s=$('fSort').value;
+  let L=PLAYERS.filter(p=>(!q||(p.name||'').toLowerCase().includes(q)||(p.classCode||'').toLowerCase().includes(q))
+    &&(!k||(k==='personal'?p.personal:!!p.classCode)));
+  const key={act:p=>p.act,plays:p=>p.plays,passed:p=>p.passed,new:p=>p.cre}[s];
+  return L.sort((a,b)=>key(b)-key(a));
+}
+const infoTxt=p=>{const i=p.info;if(!i)return p.personal?'-':'';return i.kind==='hs'?`HS lớp ${i.grade} · ${i.school||''}`:i.now==='work'?`Đi làm: ${i.job||''}`:`Đi học: ${i.school||''}`};
+const csTxt=p=>p.consent?(p.consent.type==='parent'?'Bố mẹ đồng ý':'Tự đồng ý (16+)'):p.personal?'Chưa':'Theo lớp';
+const cs=p=>{const t=csTxt(p);return t==='Chưa'?'<span class="down">Chưa</span>':esc(t)};
+function renderPlayers(){
+  const L=filtered(),V=L.slice(0,shown);
+  const dg=p=>{const a=pct(p.d1),b=pct(p.d2);if(a==null)return'-';if(p.nDiag<2)return a+'%';
+    return`${a}% → <span class="${b>a?'up':b<a?'down':''}">${b}%</span>`};
+  $('playT').innerHTML=V.map(p=>`<tr><td>${esc(p.name)}</td>
+    <td>${p.personal?'Cá nhân':''}${p.personal&&p.classCode?' + ':''}${p.classCode?'Lớp <b>'+esc(p.classCode)+'</b>':''}</td>
+    <td>${esc(infoTxt(p))}</td>
+    <td>${p.region&&REG[p.region]?`<span class="dot" style="background:${REG[p.region].c}"></span>${REG[p.region].name}`:'-'}</td>
+    <td class="n">${p.passed}</td><td class="n">${fmtN(p.plays)}</td><td>${dg(p)}</td><td>${cs(p)}</td><td>${dtstr(p.act)}</td></tr>`).join('')
+    ||'<tr><td colspan="9" class="note">Không có người chơi phù hợp.</td></tr>';
+  $('playInfo').textContent=`Đang hiện ${V.length}/${L.length} người chơi.`;
+  $('more').classList.toggle('hide',V.length>=L.length);
+}
+$('more').onclick=()=>{shown+=100;renderPlayers()};
+['q','fKind','fSort'].forEach(id=>$(id).addEventListener('input',()=>{shown=50;renderPlayers()}));
+
+$('csv').onclick=()=>{
+  const head=['Tên','Loại','Mã lớp','Đối tượng','Lớp (HS)','Trường','Nghề nghiệp','Quê','Chặng qua','Lượt chơi','Lượt về đích','Đọc thử lần đầu (%)','Đọc thử gần nhất (%)','Đồng ý','Ngày tạo','Hoạt động gần nhất'];
+  const rows=filtered().map(p=>[p.name,p.personal?'Cá nhân':'Lớp',p.classCode||'',p.info?(p.info.kind==='hs'?'Học sinh':p.info.now==='work'?'Đi làm (18+)':'Đi học (18+)'):'',p.info&&p.info.grade||'',p.info&&p.info.school||'',p.info&&p.info.job||'',p.region&&REG[p.region]?REG[p.region].name:'',p.passed,p.plays,p.wins,pct(p.d1)??'',pct(p.d2)??'',csTxt(p),dstr(p.cre),dtstr(p.act)]);
+  const q=v=>{v=String(v??'');if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'};
+  const blob=new Blob(['﻿'+[head,...rows].map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`thong-ke-nguoi-choi-${new Date().toISOString().slice(0,10)}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+};
+</script>
+</body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="aec8cac9-3870-4dca-8621-ce0873a7c805" data-app-host="app.netlify.com" data-account-tier="free"></script>
